@@ -1,13 +1,24 @@
 import socket
+import threading
 
 host = input("Ip address to connect to: ")
 port = 4567
+messages = []
 
 s = socket.socket()
 s.connect((host,port))
 e = s.recv(1024)
 print(e.decode())
 connectedtoserver = True
+
+x = threading.Thread(target=)
+
+def listentohost(c):
+    global connectedtoserver
+    while connectedtoserver:
+        try:
+            msgrecv = c.recv(1024)
+
 
 while connectedtoserver:
     try:

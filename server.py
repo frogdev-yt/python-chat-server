@@ -13,9 +13,13 @@ import datetime
 
 messages = [{}] # also write chat log to file
 # storedusers = [{"name":john,"hardwareid":"1232_AFS12","username":"johnthegreatest27","password":"password"}] also written to file
+connectedclients = []
 
 def listentoclient(c: socket.socket,a: tuple): # that is how you type variables in python :D
     global serveropen
+    global sendmessage
+    global connectedclients
+    connectedclients.append(c)
     connectedtoclient = True
     c.send(welcomemsg.encode())
     c.settimeout(1)
@@ -25,8 +29,9 @@ def listentoclient(c: socket.socket,a: tuple): # that is how you type variables 
         try:
             msg = c.recv(1024) # 2 different messages received from client on different wavelengths, one for message, and one for general ping / showing its there. If the ping one fails, close connection. if the msg one fails, just check again
             time = datetime.datetime.now().strftime("%H:%M")
-            #print(a[0] + " at " + time + ": " + msg.decode())
+            print(a[0] + " at " + time + ": " + msg.decode())
             messages.append({"time":time,"sender":a}) # change sender to username of a, or displayname of a, or userid of a
+            sendmessage(msg) # figure out how to send message data (dictionary) in form of string
         except TimeoutError:
             try:
                 #print("checking for new message from client")
@@ -39,6 +44,10 @@ def listentoclient(c: socket.socket,a: tuple): # that is how you type variables 
                 print("the user that was associated with this connection closed their client!")
                 connectedtoclient = False
         
+
+def sendmessage(m):
+    for i in connectedclients:
+        i:socket.socket; i.send(m)
 
 host = "localhost"
 port = 4567
