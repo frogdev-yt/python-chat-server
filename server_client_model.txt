@@ -1,0 +1,6 @@
+server needs to send and receive messages
+server has main thread that receives connections and makes new threads for each connection
+server would need 2 threads per person, but only sends messages when messages are received from other clients
+
+client needs to send and receive messages
+client needs 2 threads: 1 for sending and 1 for receiving messages

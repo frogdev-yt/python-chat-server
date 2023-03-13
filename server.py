@@ -30,8 +30,8 @@ def listentoclient(c: socket.socket,a: tuple): # that is how you type variables 
             msg = c.recv(1024) # 2 different messages received from client on different wavelengths, one for message, and one for general ping / showing its there. If the ping one fails, close connection. if the msg one fails, just check again
             time = datetime.datetime.now().strftime("%H:%M")
             print(a[0] + " at " + time + ": " + msg.decode())
-            messages.append({"time":time,"sender":a}) # change sender to username of a, or displayname of a, or userid of a
-            sendmessage(msg) # figure out how to send message data (dictionary) in form of string
+            messages.append({"time":time,"sender":a,"msg":msg.decode()}) # change sender to username of a, or displayname of a, or userid of a
+            sendmessage(str({"time":time,"sender":a,"msg":msg.decode()}).encode()) # figure out how to send message data (dictionary) in form of string
         except TimeoutError:
             try:
                 #print("checking for new message from client")
@@ -40,9 +40,9 @@ def listentoclient(c: socket.socket,a: tuple): # that is how you type variables 
                 print("keyboard interrupted while checking for new messages, terminating connection to client")
                 c.close()
                 connectedtoclient = False
-            except ConnectionResetError:
-                print("the user that was associated with this connection closed their client!")
-                connectedtoclient = False
+        except ConnectionResetError:
+            print("the user that was associated with this connection (" + a[0] + ") closed their client!")
+            connectedtoclient = False
         
 
 def sendmessage(m):
